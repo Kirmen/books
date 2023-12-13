@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from books.config import PORT, PASSWORD_DB, HOST, SOCIAL_AUTH_GITHUB_KEY_from_config, SOCIAL_AUTH_GITHUB_SECRET_from_config
+from books.config import PORT, PASSWORD_DB, HOST, SOCIAL_AUTH_GITHUB_KEY_from_config, \
+    SOCIAL_AUTH_GITHUB_SECRET_from_config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,10 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #third_party_apps
+    # third_party_apps
     'social_django',
+    'debug_toolbar',
 
-    #my_apps:
+    # my_apps:
     'store.apps.StoreConfig',
 ]
 
@@ -52,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar_force.middleware.ForceDebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'books.urls'
@@ -59,7 +63,7 @@ ROOT_URLCONF = 'books.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates',],
+        'DIRS': ['templates', ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -96,7 +100,6 @@ AUTHENTICATION_BACKENDS = (
 
     'django.contrib.auth.backends.ModelBackend',
 )
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -147,3 +150,7 @@ SOCIAL_AUTH_JSONFIELD_ENABLED = True
 # SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_GITHUB_KEY = SOCIAL_AUTH_GITHUB_KEY_from_config
 SOCIAL_AUTH_GITHUB_SECRET = SOCIAL_AUTH_GITHUB_SECRET_from_config
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]

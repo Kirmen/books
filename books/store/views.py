@@ -13,9 +13,14 @@ from store.serializers import BooksSerializer, UserBookRelationSerializer
 
 class BookViewSet(ModelViewSet):
     queryset = Book.objects.all().annotate(
-            annotated_likes=Count(Case(When(userbookrelation__like=True, then=1))),
-            rating=Avg('userbookrelation__rate')
-        ).order_by('id')
+        annotated_likes=Count(Case(When(userbookrelation__like=True, then=1)))).select_related(
+        'owner').prefetch_related('readers').order_by('id')  # rating=Avg('userbookrelation__rate'),
+
+    # Прибираємо select_related('owner) пишемо  всередені annotate: owner_name=F('owner__username')
+    # Замість prefetch_related('readers') пишемо
+    # prefetch_related(Prefetch('readers', queryset=User.objects.all().only('first_name', 'last_name'))),
+    # у serializer прибрати соурс
+
     serializer_class = BooksSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffAuthenticatedOrReadOnly]
